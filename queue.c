@@ -61,6 +61,7 @@ bool q_insert_head(queue_t *q, char *s)
         free(newh);
         return false;
     }
+    memset(newh->value, 0, sizeof(char) * (strlen(s) + 1));
 
     strncpy(newh->value, s, strlen(s));
     newh->next = q->head;
@@ -94,6 +95,7 @@ bool q_insert_tail(queue_t *q, char *s)
         free(newt);
         return false;
     }
+    memset(newt->value, 0, sizeof(char) * (strlen(s) + 1));
 
     strncpy(newt->value, s, strlen(s));
     newt->next = NULL;
@@ -166,8 +168,24 @@ int q_size(queue_t *q)
  */
 void q_reverse(queue_t *q)
 {
-    /* TODO: You need to write the code for this function */
-    /* TODO: Remove the above comment when you are about to implement. */
+    if (q == NULL || q->size <= 1)
+        return;
+
+    list_ele_t *insert, *tmp, *finish;
+    insert = q->head->next;
+    q->tail->next = q->head;
+    q->head = q->tail;
+    q->tail = q->tail->next;
+    q->tail->next = NULL;
+    finish = q->tail;
+
+    while (insert != q->head) {
+        tmp = insert->next;
+        insert->next = finish;
+        q->head->next = insert;
+        finish = insert;
+        insert = tmp;
+    }
 }
 
 /*
