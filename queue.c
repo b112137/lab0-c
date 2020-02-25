@@ -84,26 +84,26 @@ bool q_insert_tail(queue_t *q, char *s)
     if (q == NULL)
         return false;
 
-    list_ele_t *newh;
-    newh = malloc(sizeof(list_ele_t));
-    if (newh == NULL)
+    list_ele_t *newt;
+    newt = malloc(sizeof(list_ele_t));
+    if (newt == NULL)
         return false;
 
-    newh->value = (char *) malloc(sizeof(char) * (strlen(s) + 1));
-    if (newh->value == NULL) {
-        free(newh);
+    newt->value = (char *) malloc(sizeof(char) * (strlen(s) + 1));
+    if (newt->value == NULL) {
+        free(newt);
         return false;
     }
 
-    strncpy(newh->value, s, strlen(s));
-    newh->next = NULL;
+    strncpy(newt->value, s, strlen(s));
+    newt->next = NULL;
     /* if the queue is empty, q->head adn q->tail are NULL */
     if (q->head == NULL && q->tail == NULL) {
-        q->head = newh;
-        q->tail = newh;
+        q->head = newt;
+        q->tail = newt;
     } else {
-        q->tail->next = newh;
-        q->tail = newh;
+        q->tail->next = newt;
+        q->tail = newt;
     }
     q->size++;
     return true;
