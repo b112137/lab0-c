@@ -252,4 +252,14 @@ void q_sort(queue_t *q)
     if (q == NULL || q->size <= 1)
         return;
     q->head = merge(q->head, q->size);
+    list_ele_t *tmp;
+    tmp = q->head;
+    for (size_t i = 0; i < q->size; i++) {
+        if (i == q->size - 1)
+            q->tail = tmp;
+        tmp = tmp->next;
+    }
+    // while(tmp->next != NULL)
+    //     tmp = tmp->next;
+    // q->tail = tmp;
 }
