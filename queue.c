@@ -249,5 +249,6 @@ void q_sort(queue_t *q)
 {
     if (q == NULL || q->size <= 1)
         return;
+
     q->head = merge(q->head, q->size);
 }
