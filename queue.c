@@ -23,8 +23,19 @@ queue_t *q_new()
 /* Free all storage used by queue */
 void q_free(queue_t *q)
 {
-    /* TODO: How about freeing the list elements and the strings? */
-    /* Free queue structure */
+    if (q == NULL)
+        return;
+    list_ele_t *current;
+    current = q->head;
+
+    /* visit all the elements of the queue and free each */
+    while (current != NULL) {
+        q->head = q->head->next;
+        if (current->value)
+            free(current->value);
+        free(current);
+        current = q->head;
+    }
     free(q);
 }
 
@@ -37,13 +48,27 @@ void q_free(queue_t *q)
  */
 bool q_insert_head(queue_t *q, char *s)
 {
+    if (q == NULL)
+        return false;
+
     list_ele_t *newh;
-    /* TODO: What should you do if the q is NULL? */
     newh = malloc(sizeof(list_ele_t));
-    /* Don't forget to allocate space for the string and copy it */
-    /* What if either call to malloc returns NULL? */
+    if (newh == NULL)
+        return false;
+
+    newh->value = (char *) malloc(sizeof(char) * (strlen(s) + 1));
+    if (newh->value == NULL) {
+        free(newh);
+        return false;
+    }
+
+    strncpy(newh->value, s, strlen(s));
     newh->next = q->head;
     q->head = newh;
+    /* if the queue is empty, q->tail is NULL */
+    if (q->tail == NULL)
+        q->tail = newh;
+    q->size++;
     return true;
 }
 
@@ -56,10 +81,32 @@ bool q_insert_head(queue_t *q, char *s)
  */
 bool q_insert_tail(queue_t *q, char *s)
 {
-    /* TODO: You need to write the complete code for this function */
-    /* Remember: It should operate in O(1) time */
-    /* TODO: Remove the above comment when you are about to implement. */
-    return false;
+    if (q == NULL)
+        return false;
+
+    list_ele_t *newh;
+    newh = malloc(sizeof(list_ele_t));
+    if (newh == NULL)
+        return false;
+
+    newh->value = (char *) malloc(sizeof(char) * (strlen(s) + 1));
+    if (newh->value == NULL) {
+        free(newh);
+        return false;
+    }
+
+    strncpy(newh->value, s, strlen(s));
+    newh->next = NULL;
+    /* if the queue is empty, q->head adn q->tail are NULL */
+    if (q->head == NULL && q->tail == NULL) {
+        q->head = newh;
+        q->tail = newh;
+    } else {
+        q->tail->next = newh;
+        q->tail = newh;
+    }
+    q->size++;
+    return true;
 }
 
 /*
