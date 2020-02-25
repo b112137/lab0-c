@@ -121,7 +121,7 @@ bool q_insert_tail(queue_t *q, char *s)
  */
 bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
 {
-    if (q == NULL)
+    if (q == NULL || q->size == 0)
         return false;
 
     list_ele_t *delete;
@@ -193,8 +193,61 @@ void q_reverse(queue_t *q)
  * No effect if q is NULL or empty. In addition, if q has only one
  * element, do nothing.
  */
+list_ele_t *merge(list_ele_t *start, size_t lenth)
+{
+    if (lenth <= 1)
+        return start;
+
+    list_ele_t *left, *right, *tmp;
+    size_t left_lenth, right_lenth;
+    if (lenth % 2 == 0) {
+        left_lenth = right_lenth = lenth / 2;
+    } else {
+        left_lenth = lenth / 2;
+        right_lenth = lenth / 2 + 1;
+    }
+
+    left = start;
+    right = start;
+    for (int i = 0; i < left_lenth; i++) {
+        if (i < left_lenth - 1)
+            right = right->next;
+        else {
+            tmp = right->next;
+            right->next = NULL;
+            right = tmp;
+        }
+    }
+
+    left = merge(left, left_lenth);
+    right = merge(right, right_lenth);
+
+    list_ele_t *merge = NULL;
+    while (left || right) {
+        if (right == NULL || (left && strcmp(left->value, right->value) < 0)) {
+            if (merge == NULL) {
+                start = merge = left;
+            } else {
+                merge->next = left;
+                merge = merge->next;
+            }
+            left = left->next;
+        } else {
+            if (merge == NULL) {
+                start = merge = right;
+            } else {
+                merge->next = right;
+                merge = merge->next;
+            }
+            right = right->next;
+        }
+    }
+    return start;
+}
+
 void q_sort(queue_t *q)
 {
-    /* TODO: You need to write the code for this function */
-    /* TODO: Remove the above comment when you are about to implement. */
+    if (q == NULL || q->size <= 1)
+        return;
+    q->head = merge(q->head, q->size);
 }
