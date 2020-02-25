@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "harness.h"
+#include "natsort/strnatcmp.h"
 #include "queue.h"
 
 /*
@@ -224,7 +225,8 @@ list_ele_t *merge(list_ele_t *start, size_t lenth)
 
     list_ele_t *merge = NULL;
     while (left || right) {
-        if (right == NULL || (left && strcmp(left->value, right->value) < 0)) {
+        if (right == NULL ||
+            (left && strnatcmp(left->value, right->value) < 0)) {
             if (merge == NULL) {
                 start = merge = left;
             } else {
@@ -249,6 +251,5 @@ void q_sort(queue_t *q)
 {
     if (q == NULL || q->size <= 1)
         return;
-
     q->head = merge(q->head, q->size);
 }
